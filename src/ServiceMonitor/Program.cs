@@ -3,7 +3,14 @@ builder.Services.AddWindowsService(options =>
 {
     options.ServiceName = "Service Monitor";
 });
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("Default")
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (m, c, ch, e) => true
+    };
+});
 builder.Services.AddSingleton<TcpService>();
 builder.Services.AddSingleton<HttpService>();
 builder.Services.AddSingleton<ControlService>();

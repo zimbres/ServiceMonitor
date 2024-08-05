@@ -14,7 +14,7 @@ public class HttpService
 
     public async Task<bool> CheckHttpAsync(string url, bool checkForWord, string word = null)
     {
-        _httpClient = _httpClientFactory.CreateClient();
+        _httpClient = _httpClientFactory.CreateClient("Default");
         try
         {
             var response = await _httpClient.GetAsync(url);
