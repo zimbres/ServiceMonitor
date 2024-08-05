@@ -16,13 +16,13 @@ public class ControlService
             using var serviceController = new ServiceController(serviceName);
             if (serviceController.Status == ServiceControllerStatus.Stopped)
             {
-                _logger.LogInformation("Starting service {serviceName}...", serviceName);
+                _logger.LogWarning("Starting service {serviceName}...", serviceName);
                 serviceController.Start();
             }
             
             else if (serviceController.Status == ServiceControllerStatus.Running)
             {
-                _logger.LogInformation("Restarting service {serviceName}...", serviceName);
+                _logger.LogWarning("Restarting service {serviceName}...", serviceName);
                 serviceController.Stop();
                 serviceController.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(60));
                 serviceController.Start();
@@ -30,9 +30,9 @@ public class ControlService
             
             if (serviceController.Status == ServiceControllerStatus.StopPending)
             {
-                _logger.LogInformation("Waiting service {serviceName} to stop...", serviceName);
+                _logger.LogWarning("Waiting service {serviceName} to stop...", serviceName);
                 serviceController.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(60));
-                _logger.LogInformation("Starting service {serviceName}...", serviceName);
+                _logger.LogWarning("Starting service {serviceName}...", serviceName);
                 serviceController.Start();
             }
             serviceController.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
