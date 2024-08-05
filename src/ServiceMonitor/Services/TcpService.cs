@@ -16,7 +16,16 @@ public class TcpService
             using var tcpClient = new TcpClient();
             var result = tcpClient.BeginConnect(ipAddress, port, null, null);
             var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-            return success && tcpClient.Connected;
+
+            if (success && tcpClient.Connected)
+            {
+                return true;
+            }
+            else 
+            {
+                _logger.LogWarning("Port {Port} is not listening on {ipAddress}.", port, ipAddress);
+                return false;
+            }
         }
         catch (Exception ex)
         {

@@ -23,30 +23,36 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
+            foreach (var service in _configuration.Services)
             {
-                _logger.LogInformation("Checking TCP port {IpAddress}:{Port}...", _configuration.IpAddress, _configuration.Port);
-            }
-
-            if (_configuration.CheckType == "Tcp")
-            {
-                if (!_tcpService.CheckTcpPortListening(_configuration.IpAddress, _configuration.Port))
-                {
-                    _logger.LogWarning("Port {Port} is not listening. Restarting service {ServiceName}...", _configuration.Port, _configuration.ServiceName);
-                    _controlService.RestartService(_configuration.ServiceName);
-                }
-            }
-
-            if (_configuration.CheckType == "Http")
-            {
-                if (!await _httpService.CheckHttpAsync(_configuration.HttpUrl, _configuration.CheckForWord, _configuration.Word))
-                {
-                    _logger.LogWarning("Port {Port} is not listening. Restarting service {ServiceName}...", _configuration.Port, _configuration.ServiceName);
-                    _controlService.RestartService(_configuration.ServiceName);
-                }
+                await ProcessService(service);
             }
 
             await Task.Delay(_configuration.RunIntervalSeconds * 1000, stoppingToken);
+        }
+    }
+
+    private async Task ProcessService(Service service)
+    {
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Checking service: {service}...", service.ServiceName);
+        }
+
+        if (service.IpAddress is not null)
+        {
+            if (!_tcpService.CheckTcpPortListening(service.IpAddress, service.Port))
+            {
+                _controlService.RestartService(service.ServiceName);
+            }
+        }
+
+        if (service.HttpUrl is not null)
+        {
+            if (!await _httpService.CheckHttpAsync(service.HttpUrl, service.WordToCheck))
+            {
+                _controlService.RestartService(service.ServiceName);
+            }
         }
     }
 }

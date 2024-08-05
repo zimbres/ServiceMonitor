@@ -12,7 +12,7 @@ public class HttpService
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<bool> CheckHttpAsync(string url, bool checkForWord, string word = null)
+    public async Task<bool> CheckHttpAsync(string url, string wordToCheck)
     {
         _httpClient = _httpClientFactory.CreateClient("Default");
         try
@@ -20,26 +20,26 @@ public class HttpService
             var response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
-                if (!checkForWord)
+                if (wordToCheck is null || wordToCheck is "")
                 {
                     _logger.LogInformation("HTTP request succeeded with status code {StatusCode}.", response.StatusCode);
                     return true;
                 }
-                else if (word != null)
+                else
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     using var document = JsonDocument.Parse(content);
                     var json = document.RootElement.GetRawText();
-                    var containsWord = json.Contains(word);
+                    var containsWord = json.Contains(wordToCheck);
 
                     if (containsWord)
                     {
-                        _logger.LogInformation("HTTP request succeeded and contains the word '{word}'.", word);
+                        _logger.LogInformation("HTTP request succeeded and response contains the word '{word}'.", wordToCheck);
                         return true;
                     }
                     else
                     {
-                        _logger.LogWarning("HTTP request succeeded but does not contain the word '{word}'.", word);
+                        _logger.LogWarning("HTTP request succeeded but response does not contain the word '{word}'.", wordToCheck);
                         return false;
                     }
                 }
