@@ -1,8 +1,9 @@
 # Windows Service Monitor
 
-This application runs as a Windows Service and is designed to monitor and manage the health of a specified service. It performs this task by either probing a TCP port to ensure it is listening or by making an HTTP request to check for a successful status code or the presence of a specific word in the response. If the monitored service is found to be unhealthy, the application will automatically restart it.
+This application runs as a Windows Service and is designed to monitor and manage the health of a specified service(s). It performs this task by either probing a TCP port to ensure it is listening or by making an HTTP request to check for a successful status code or the presence of a specific word in the response. If the monitored service is found to be unhealthy, the application will automatically restart it.
 
 ### Configuration required:
+V1
 
 ```json
 
@@ -26,7 +27,36 @@ This application runs as a Windows Service and is designed to monitor and manage
 }
 
 ```
-
+V2
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft.Hosting.Lifetime": "Warning"
+    }
+  },
+  "Configuration": {
+    "RunIntervalSeconds": 30,
+    "Services": [
+      {
+        "ServiceName": "YourServiceName",
+        "IpAddress": "127.0.0.1",
+        "Port": 8080
+      },
+      {
+        "ServiceName": "YourServiceName",
+        "HttpUrl": "http://localhost:3000/api/health",
+        "WordToCheck": "Healthy"
+      },
+      {
+        "ServiceName": "YourServiceName",
+        "HttpUrl": "http://localhost:3000/noword"
+      }
+    ]
+  }
+}
+```
 
 
 ---
