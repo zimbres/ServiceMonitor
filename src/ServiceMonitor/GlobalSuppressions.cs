@@ -5,5 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-//[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ServiceMonitor.Worker.RestartService(System.String)")]
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ServiceMonitor.Services.ControlService.RestartService(System.String)")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ServiceMonitor.Services.ControlService.RestartService(ServiceMonitor.Configurations.Service)")]

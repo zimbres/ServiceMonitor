@@ -43,7 +43,7 @@ public class Worker : BackgroundService
         {
             if (!_tcpService.CheckTcpPortListening(service.IpAddress, service.Port))
             {
-                _controlService.RestartService(service.ServiceName);
+                _controlService.RestartService(service);
             }
         }
 
@@ -51,7 +51,7 @@ public class Worker : BackgroundService
         {
             if (!await _httpService.CheckHttpAsync(service.HttpUrl, service.WordToCheck))
             {
-                _controlService.RestartService(service.ServiceName);
+                _controlService.RestartService(service);
             }
         }
     }
