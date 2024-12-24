@@ -14,6 +14,7 @@ builder.Services.AddHttpClient("Default")
 builder.Services.AddSingleton<TcpService>();
 builder.Services.AddSingleton<HttpService>();
 builder.Services.AddSingleton<ControlService>();
+builder.Services.AddSingleton<FileService>();
 
 builder.Services.AddHostedService<Worker>().Configure<HostOptions>(options =>
 {

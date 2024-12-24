@@ -14,4 +14,7 @@ public class Service
     public string HttpUrl { get; set; }
     public string WordToCheck { get; set; }
     public string CustomCommand { get; set; }
+    public string FileToCheck { get; set; }
+    public int FileCheckMinutes { get; set; }
+    public bool FileMissingRestart { get; set; }
 }

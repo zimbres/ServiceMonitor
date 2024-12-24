@@ -5,16 +5,18 @@ public class Worker : BackgroundService
     private readonly ILogger<Worker> _logger;
     private readonly TcpService _tcpService;
     private readonly HttpService _httpService;
+    private readonly FileService _fileService;
     private readonly ControlService _controlService;
     private readonly Configuration _configuration;
 
-    public Worker(ILogger<Worker> logger, IConfiguration configuration, TcpService tcpService, HttpService httpService, ControlService controlService)
+    public Worker(ILogger<Worker> logger, IConfiguration configuration, TcpService tcpService, HttpService httpService, ControlService controlService, FileService fileService)
     {
         _logger = logger;
         _configuration = configuration.GetSection(nameof(Configuration)).Get<Configuration>();
         _tcpService = tcpService;
         _httpService = httpService;
         _controlService = controlService;
+        _fileService = fileService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -50,6 +52,14 @@ public class Worker : BackgroundService
         if (service.HttpUrl is not null)
         {
             if (!await _httpService.CheckHttpAsync(service.HttpUrl, service.WordToCheck))
+            {
+                _controlService.RestartService(service);
+            }
+        }
+
+        if (service.FileToCheck is not null)
+        {
+            if (!_fileService.CheckFile(service.FileToCheck, service.FileCheckMinutes, service.FileMissingRestart))
             {
                 _controlService.RestartService(service);
             }

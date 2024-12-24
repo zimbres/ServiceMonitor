@@ -7,7 +7,7 @@
     <UserSecretsId>dotnet-ServiceMonitor-02b8361b-7a93-472d-a2d6-7b2e8f7973af</UserSecretsId>
     <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
     <FileVersion>$(PackageVersion)</FileVersion>
-    <Version>3.0.0.1</Version>
+    <Version>3.1.0.1</Version>
     <ApplicationIcon>service.ico</ApplicationIcon>
     <Copyright>Zimbres.COM</Copyright>
   </PropertyGroup>
